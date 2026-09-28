@@ -1,0 +1,15 @@
+{
+  "name": "cems-root",
+  "version": "1.0.0",
+  "description": "Campus Event Management System (CEMS) - FSD-II Project",
+  "scripts": {
+    "dev:backend": "npm run dev --prefix backend",
+    "dev:frontend": "npm run dev --prefix frontend",
+    "start:backend": "npm start --prefix backend",
+    "seed": "npm run seed --prefix backend",
+    "build:frontend": "npm run build --prefix frontend"
+  },
+  "keywords": ["mern", "event-management", "college", "fsd-ii"],
+  "author": "",
+  "license": "ISC"
+}
