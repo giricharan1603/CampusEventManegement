@@ -22,7 +22,7 @@ echo.
 echo ========================================================
 echo   Application is now running!
 echo   Frontend: http://localhost:5173
-echo   Backend:  http://localhost:5000/api/v1/health
+echo   Backend:  http://localhost:5000/api/health
 echo ========================================================
 echo   Keep the two opened terminal windows running.
 echo   Press any key in this window to exit this launcher.

@@ -1,102 +1,97 @@
 # Campus Event Management System (CEMS)
-### Full-Stack Web Application (FSD-II Project)
+### Simplified Full-Stack MERN Application (FSD-II Project)
 
-A centralized, responsive, role-based web application engineered to digitize college event planning, online seat registrations, and participant roster management.
-
----
-
-## 🚀 Key Features
-
-### 1. Student Experience
-- **Event Discovery**: Real-time browsing of technical, cultural, sports, and academic events with live search and category tags.
-- **Atomic Registration**: One-click seat booking with atomic capacity checks to prevent race condition overbooking.
-- **Seat Management**: Track active and past registrations on a personalized student dashboard.
-- **Frictionless Cancellation**: Opt-out before deadlines with automatic seat release for other students.
-
-### 2. Faculty Coordinator Experience
-- **Event Lifecycle Control**: Create, update, or cancel campus events with detailed dates, times, venues, and registration deadlines.
-- **Live Attendance Auditing**: View real-time attendee rosters with student roll numbers, departments, and contact info.
-- **Roster Export**: Instant client-side CSV export of participant lists for offline attendance checking.
-
-### 3. Administrator Experience
-- **Platform Analytics**: High-level KPI metrics across total users, active events, and registration fill rates.
-- **User Directory**: Search and manage user accounts with role escalation controls (`student`, `faculty`, `admin`).
+A clean, beginner-friendly full-stack web application designed for simplicity, easy understanding, and effortless academic presentation.
 
 ---
 
-## 🛠️ Technology Stack
+## 📁 Clean & Simple File Structure
 
-| Layer | Technologies |
-| :--- | :--- |
-| **Frontend** | React 18, Vite, Tailwind CSS, Lucide Icons, React Router v6, Axios |
-| **Backend** | Node.js, Express.js (REST API under `/api/v1` namespace) |
-| **Database** | MongoDB with Mongoose ODM (includes in-memory fallback for zero-setup local dev) |
-| **Security** | JWT (JSON Web Tokens), bcryptjs password hashing, Role-Based Access Control (RBAC) |
+```
+fsd-ii-project/
+├── backend/
+│   ├── models/
+│   │   ├── User.js          # User schema (Student, Faculty, Admin)
+│   │   ├── Event.js         # Event schema (Title, Category, Date, Capacity)
+│   │   └── Registration.js  # Registration schema (Student + Event reference)
+│   ├── routes/
+│   │   ├── auth.js          # Login, Register & Admin User Management
+│   │   ├── events.js        # Get, Create & Delete events
+│   │   └── registrations.js # Register, Cancel & Attendee Roster
+│   ├── server.js            # Express server with automatic database fallback
+│   └── package.json
+│
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   │   └── Navbar.jsx   # Header with user role and navigation
+│   │   ├── pages/
+│   │   │   ├── EventList.jsx    # Home: Event cards with Search & Category filter
+│   │   │   ├── EventDetail.jsx  # Event details + 1-Click Register & Cancel
+│   │   │   ├── Auth.jsx         # Sign In & Sign Up with 1-Click Demo buttons
+│   │   │   ├── MyEvents.jsx     # Student: My registered seats & cancellation
+│   │   │   └── FacultyAdmin.jsx # Faculty/Admin: Publish events & view student roster
+│   │   ├── App.jsx          # Clean Router and User State
+│   │   ├── main.jsx         # React mounting
+│   │   └── index.css        # Tailwind styling
+│   ├── index.html
+│   ├── vite.config.js       # Auto-proxies /api to http://localhost:5000
+│   └── package.json
+│
+├── start.bat                # 1-Click Windows Launcher
+└── README.md
+```
 
 ---
 
-## 🔑 Pre-Configured Demo Accounts
+## ⚡ 1-Click Demo Accounts
 
-For immediate evaluation, the login page features **1-Click Demo Fill Buttons**:
+On the [Sign In page](http://localhost:5173/auth), click any of the **Quick Demo Fill** buttons:
 
-| Role | Email | Password | Permissions |
+| Role | Email | Password | What You Can Do |
 | :--- | :--- | :--- | :--- |
-| **Admin** | `admin@campus.edu` | `Password@123` | System-wide statistics, user directory, role management, all events |
-| **Faculty Coordinator** | `faculty@campus.edu` | `Password@123` | Create/edit events, track student attendee rosters, CSV export |
-| **Student** | `student@campus.edu` | `Password@123` | Discover events, reserve seats, view dashboard, cancel registrations |
+| **Student** | `student@campus.edu` | `Password@123` | Browse events, 1-click register, view registrations, cancel seats |
+| **Faculty Coordinator** | `faculty@campus.edu` | `Password@123` | Publish new events, track signups, inspect attendee roster |
+| **Administrator** | `admin@campus.edu` | `Password@123` | All faculty features + view user directory and switch user roles |
 
 ---
 
-## 💻 Quick Start & Running Locally
+## 🚀 How to Run
 
-### Prerequisites
-- Node.js (v18 or higher)
-- npm (v9 or higher)
+### Method 1: 1-Click Launch (Recommended)
+Double-click **`start.bat`** in this project folder!
+It will automatically launch both backend and frontend and open your browser to **`http://localhost:5173`**.
 
-### 1. Start the Backend API Server
+### Method 2: Manual Terminal Commands
+**Terminal 1 (Backend):**
 ```bash
 cd backend
-npm install
 npm run dev
 ```
-*The backend automatically connects to MongoDB (or boots an in-memory database fallback if no local MongoDB service is running) and auto-seeds demo events and accounts.*
-- Backend runs on: `http://localhost:5000`
-- API Health Check: `http://localhost:5000/api/v1/health`
+*Backend runs on `http://localhost:5000` (auto-seeds demo data).*
 
-### 2. Start the Frontend Client
-In a new terminal:
+**Terminal 2 (Frontend):**
 ```bash
 cd frontend
-npm install
 npm run dev
 ```
-- Frontend application runs on: `http://localhost:5173`
+*Frontend runs on `http://localhost:5173`.*
 
 ---
 
-## 📡 REST API Reference (`/api/v1`)
+## 🌐 Simple API Routes
 
-### Authentication & Profile
-- `POST /api/v1/auth/register` — Create student or faculty account
-- `POST /api/v1/auth/login` — Sign in and receive JWT token
-- `GET /api/v1/auth/me` — Get current authenticated user profile
-
-### Events Catalog
-- `GET /api/v1/events` — List events (supports `?category=`, `?search=`, `?status=`, `?upcoming=true`)
-- `GET /api/v1/events/:id` — Get complete event details with live capacity
-- `POST /api/v1/events` — `[Faculty/Admin]` Create a new event
-- `PUT /api/v1/events/:id` — `[Faculty/Admin]` Update event details
-- `DELETE /api/v1/events/:id` — `[Faculty/Admin]` Soft-cancel or delete event
-- `GET /api/v1/events/faculty/my-events` — `[Faculty/Admin]` Get events coordinated by logged-in faculty
-
-### Registrations
-- `POST /api/v1/registrations/events/:eventId` — `[Student]` Atomically reserve seat
-- `GET /api/v1/registrations/my` — `[Student]` Get personal registration history
-- `PATCH /api/v1/registrations/:id/cancel` — `[Student]` Cancel registration & release seat
-- `GET /api/v1/registrations/events/:eventId/attendees` — `[Faculty/Admin]` View participant roster
-
-### Administration
-- `GET /api/v1/admin/stats` — `[Admin]` System KPI analytics
-- `GET /api/v1/admin/users` — `[Admin]` Search user directory
-- `PATCH /api/v1/admin/users/:id/role` — `[Admin]` Modify user role
-- `DELETE /api/v1/admin/users/:id` — `[Admin]` Delete user and cascade records
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `POST` | `/api/auth/register` | Register new user account |
+| `POST` | `/api/auth/login` | Login user |
+| `GET` | `/api/auth/users` | List all users (Admin) |
+| `PATCH` | `/api/auth/users/:id/role` | Change user role (Admin) |
+| `GET` | `/api/events` | List all events (optional `?category=` or `?search=`) |
+| `GET` | `/api/events/:id` | Get single event details |
+| `POST` | `/api/events` | Create new event (Faculty/Admin) |
+| `DELETE`| `/api/events/:id` | Delete event (Faculty/Admin) |
+| `POST` | `/api/registrations` | Register student for event |
+| `GET` | `/api/registrations/student/:id` | View registrations for student |
+| `PATCH` | `/api/registrations/:id/cancel` | Cancel seat registration |
+| `GET` | `/api/registrations/event/:id` | View attendee roster for event |
