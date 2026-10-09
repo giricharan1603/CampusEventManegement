@@ -11,7 +11,14 @@ export default function App() {
   const [user, setUser] = useState(() => {
     try {
       const saved = localStorage.getItem('cems_user');
-      return saved && saved !== 'undefined' ? JSON.parse(saved) : null;
+      if (!saved || saved === 'undefined') return null;
+      const parsed = JSON.parse(saved);
+      // If legacy MongoDB 24-char ObjectId is found, clear it so user starts clean with PostgreSQL
+      if (parsed?._id && typeof parsed._id === 'string' && parsed._id.length > 15) {
+        localStorage.removeItem('cems_user');
+        return null;
+      }
+      return parsed;
     } catch {
       return null;
     }
@@ -44,7 +51,7 @@ export default function App() {
         </main>
 
         <footer className="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-400">
-          Campus Event Management System • FSD-II Academic Project
+          Campus Event Management System 
         </footer>
       </div>
     </Router>

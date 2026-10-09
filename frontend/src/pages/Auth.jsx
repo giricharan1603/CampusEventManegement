@@ -88,7 +88,7 @@ export const Auth = ({ onLoginSuccess }) => {
           </button>
         </div>
 
-        {/* Demo Fill Quick Buttons */}
+        {/* Demo Fill Quick Buttons 
         <div className="p-3 bg-blue-50/60 rounded-2xl border border-blue-100 text-xs">
           <span className="font-bold text-blue-900 block mb-1.5 text-[11px]">
             ⚡ 1-Click Demo Fill (Password: Password@123)
@@ -117,6 +117,7 @@ export const Auth = ({ onLoginSuccess }) => {
             </button>
           </div>
         </div>
+        */}
 
         {/* Alerts */}
         {error && (
@@ -136,7 +137,7 @@ export const Auth = ({ onLoginSuccess }) => {
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="e.g. Alex Johnson"
+                  placeholder="giri charan"
                   className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
@@ -155,13 +156,13 @@ export const Auth = ({ onLoginSuccess }) => {
 
               {role === 'student' && (
                 <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Student Roll Number / ID</label>
+                  <label className="block font-semibold text-slate-700 mb-1">Student Roll Number</label>
                   <input
                     type="text"
                     required
                     value={studentId}
                     onChange={(e) => setStudentId(e.target.value)}
-                    placeholder="e.g. CS-2026-042"
+                    placeholder="24691a05XX"
                     className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
@@ -174,7 +175,7 @@ export const Auth = ({ onLoginSuccess }) => {
                   required
                   value={department}
                   onChange={(e) => setDepartment(e.target.value)}
-                  placeholder="e.g. Computer Science"
+                  placeholder="Computer Science"
                   className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
@@ -188,7 +189,7 @@ export const Auth = ({ onLoginSuccess }) => {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="e.g. student@campus.edu"
+              placeholder="tudent@mits.com"
               className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>

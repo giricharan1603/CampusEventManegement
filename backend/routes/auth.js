@@ -1,5 +1,6 @@
 import express from 'express';
-import { User } from '../models/User.js';
+import bcrypt from 'bcryptjs';
+import { query, formatUser } from '../db.js';
 
 const router = express.Router();
 
@@ -12,23 +13,20 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ error: 'Name, email, password, and department are required.' });
     }
 
-    const existingUser = await User.findOne({ email: email.toLowerCase() });
-    if (existingUser) {
+    const cleanEmail = email.toLowerCase().trim();
+    const existingRes = await query('SELECT id FROM users WHERE email = $1', [cleanEmail]);
+    if (existingRes.rowCount > 0) {
       return res.status(400).json({ error: 'An account with this email already exists.' });
     }
 
-    const user = await User.create({
-      name,
-      email: email.toLowerCase(),
-      password,
-      role,
-      department,
-      studentId: role === 'student' ? studentId : '',
-    });
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const result = await query(
+      `INSERT INTO users (name, email, password, role, department, student_id)
+       VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
+      [name, cleanEmail, hashedPassword, role, department, role === 'student' ? studentId : '']
+    );
 
-    const userObj = user.toObject();
-    delete userObj.password;
-
+    const userObj = formatUser(result.rows[0]);
     res.status(201).json({ message: 'Registration successful!', user: userObj });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -43,20 +41,19 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ error: 'Please enter both email and password.' });
     }
 
-    const user = await User.findOne({ email: email.toLowerCase() });
-    if (!user) {
+    const cleanEmail = email.toLowerCase().trim();
+    const result = await query('SELECT * FROM users WHERE email = $1', [cleanEmail]);
+    if (result.rowCount === 0) {
       return res.status(401).json({ error: 'No user found with this email address.' });
     }
 
-    const isMatch = await user.comparePassword(password);
+    const user = result.rows[0];
+    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({ error: 'Incorrect password.' });
     }
 
-    const userObj = user.toObject();
-    delete userObj.password;
-
-    res.json({ message: `Welcome back, ${user.name}!`, user: userObj });
+    res.json({ message: `Welcome back, ${user.name}!`, user: formatUser(user) });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -65,8 +62,8 @@ router.post('/login', async (req, res) => {
 // 3. Get All Users (for Admin)
 router.get('/users', async (req, res) => {
   try {
-    const users = await User.find().select('-password').sort({ createdAt: -1 });
-    res.json(users);
+    const result = await query('SELECT * FROM users ORDER BY created_at DESC');
+    res.json(result.rows.map(formatUser));
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -76,8 +73,14 @@ router.get('/users', async (req, res) => {
 router.patch('/users/:id/role', async (req, res) => {
   try {
     const { role } = req.body;
-    const user = await User.findByIdAndUpdate(req.params.id, { role }, { new: true }).select('-password');
-    res.json({ message: `User role changed to ${role}`, user });
+    const result = await query(
+      'UPDATE users SET role = $1 WHERE id = $2 RETURNING *',
+      [role, req.params.id]
+    );
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: 'User not found.' });
+    }
+    res.json({ message: `User role changed to ${role}`, user: formatUser(result.rows[0]) });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

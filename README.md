@@ -1,7 +1,7 @@
 # Campus Event Management System (CEMS)
-### Simplified Full-Stack MERN Application (FSD-II Project)
+### Clean Full-Stack Application with PostgreSQL & React (FSD-II Project)
 
-A clean, beginner-friendly full-stack web application designed for simplicity, easy understanding, and effortless academic presentation.
+A clean, beginner-friendly full-stack web application built using **Node.js, Express, PostgreSQL, and React (Vite)** designed for clarity, high performance, and effortless academic viva presentation.
 
 ---
 
@@ -10,21 +10,19 @@ A clean, beginner-friendly full-stack web application designed for simplicity, e
 ```
 fsd-ii-project/
 ├── backend/
-│   ├── models/
-│   │   ├── User.js          # User schema (Student, Faculty, Admin)
-│   │   ├── Event.js         # Event schema (Title, Category, Date, Capacity)
-│   │   └── Registration.js  # Registration schema (Student + Event reference)
 │   ├── routes/
-│   │   ├── auth.js          # Login, Register & Admin User Management
-│   │   ├── events.js        # Get, Create & Delete events
-│   │   └── registrations.js # Register, Cancel & Attendee Roster
-│   ├── server.js            # Express server with automatic database fallback
+│   │   ├── auth.js          # User registration, login & admin role updates (SQL)
+│   │   ├── events.js        # Event catalog, search, category filter & creation (SQL)
+│   │   └── registrations.js # Event seat booking, cancellations & attendee roster (SQL)
+│   ├── db.js                # PostgreSQL connection pool, table migration & seed data
+│   ├── server.js            # Express API server entry point
+│   ├── .env                 # Database configuration (PGHOST, PGUSER, PGPASSWORD, PGDATABASE)
 │   └── package.json
 │
 ├── frontend/
 │   ├── src/
 │   │   ├── components/
-│   │   │   └── Navbar.jsx   # Header with user role and navigation
+│   │   │   └── Navbar.jsx   # Header with role badge and navigation
 │   │   ├── pages/
 │   │   │   ├── EventList.jsx    # Home: Event cards with Search & Category filter
 │   │   │   ├── EventDetail.jsx  # Event details + 1-Click Register & Cancel
@@ -41,6 +39,52 @@ fsd-ii-project/
 ├── start.bat                # 1-Click Windows Launcher
 └── README.md
 ```
+
+---
+
+## 🗄️ PostgreSQL Database Schema
+
+The database automatically sets up 3 relational tables on startup:
+
+1. **`users`**:
+   - `id SERIAL PRIMARY KEY`
+   - `name`, `email UNIQUE`, `password` (hashed with bcrypt)
+   - `role` (`student` | `faculty` | `admin`)
+   - `department`, `student_id`
+   - `created_at TIMESTAMP`
+
+2. **`events`**:
+   - `id SERIAL PRIMARY KEY`
+   - `title`, `description`, `category`
+   - `date`, `time`, `venue`, `registration_deadline`
+   - `capacity`, `registered_count INT DEFAULT 0`
+   - `coordinator_id INT REFERENCES users(id)`
+   - `image`, `created_at TIMESTAMP`
+
+3. **`registrations`**:
+   - `id SERIAL PRIMARY KEY`
+   - `student_id INT REFERENCES users(id) ON DELETE CASCADE`
+   - `event_id INT REFERENCES events(id) ON DELETE CASCADE`
+   - `status` (`registered` | `cancelled`)
+   - `registered_at TIMESTAMP`
+   - `UNIQUE(student_id, event_id)` (Prevents duplicate seat bookings)
+
+---
+
+## ⚙️ Database Configuration
+
+Open **`backend/.env`** and configure your PostgreSQL connection:
+
+```env
+PORT=5000
+PGHOST=localhost
+PGPORT=5432
+PGUSER=postgres
+PGPASSWORD=your_postgres_password_here
+PGDATABASE=cems
+```
+
+> **Note**: When the backend starts, it will automatically connect to PostgreSQL, verify or create the `cems` database, initialize the tables, and seed demo accounts and events.
 
 ---
 
@@ -68,7 +112,7 @@ It will automatically launch both backend and frontend and open your browser to 
 cd backend
 npm run dev
 ```
-*Backend runs on `http://localhost:5000` (auto-seeds demo data).*
+*Backend runs on `http://localhost:5000` (auto-seeds demo data into PostgreSQL).*
 
 **Terminal 2 (Frontend):**
 ```bash

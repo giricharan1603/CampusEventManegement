@@ -1,31 +1,43 @@
 import express from 'express';
-import { Event } from '../models/Event.js';
-import { Registration } from '../models/Registration.js';
+import { query, formatEvent } from '../db.js';
 
 const router = express.Router();
+
+const EVENT_SELECT_SQL = `
+  SELECT 
+    e.*,
+    u.name AS coordinator_name,
+    u.email AS coordinator_email,
+    u.department AS coordinator_dept
+  FROM events e
+  LEFT JOIN users u ON e.coordinator_id = u.id
+`;
 
 // 1. Get all events (with optional search and category filter)
 router.get('/', async (req, res) => {
   try {
     const { category, search } = req.query;
-    const filter = {};
+    const conditions = [];
+    const params = [];
 
     if (category && category !== 'all') {
-      filter.category = category.toLowerCase();
-    }
-    if (search) {
-      filter.$or = [
-        { title: { $regex: search, $options: 'i' } },
-        { description: { $regex: search, $options: 'i' } },
-        { venue: { $regex: search, $options: 'i' } },
-      ];
+      params.push(category.toLowerCase());
+      conditions.push(`LOWER(e.category) = $${params.length}`);
     }
 
-    const events = await Event.find(filter)
-      .populate('coordinator', 'name email department')
-      .sort({ date: 1 });
+    if (search && search.trim() !== '') {
+      params.push(`%${search.trim()}%`);
+      conditions.push(`(e.title ILIKE $${params.length} OR e.description ILIKE $${params.length} OR e.venue ILIKE $${params.length})`);
+    }
 
-    res.json(events);
+    let sql = EVENT_SELECT_SQL;
+    if (conditions.length > 0) {
+      sql += ' WHERE ' + conditions.join(' AND ');
+    }
+    sql += ' ORDER BY e.date ASC';
+
+    const result = await query(sql, params);
+    res.json(result.rows.map(formatEvent));
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -34,9 +46,19 @@ router.get('/', async (req, res) => {
 // 2. Get single event by ID
 router.get('/:id', async (req, res) => {
   try {
-    const event = await Event.findById(req.params.id).populate('coordinator', 'name email department');
-    if (!event) return res.status(404).json({ error: 'Event not found.' });
-    res.json(event);
+    const eventId = parseInt(req.params.id, 10);
+    if (isNaN(eventId)) {
+      return res.status(400).json({ error: 'Invalid event ID.' });
+    }
+
+    const sql = `${EVENT_SELECT_SQL} WHERE e.id = $1`;
+    const result = await query(sql, [eventId]);
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: 'Event not found.' });
+    }
+
+    res.json(formatEvent(result.rows[0]));
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -45,26 +67,49 @@ router.get('/:id', async (req, res) => {
 // 3. Create a new event (Faculty / Admin)
 router.post('/', async (req, res) => {
   try {
-    const { title, description, category, date, time, venue, registrationDeadline, capacity, coordinatorId, image } = req.body;
+    const {
+      title,
+      description,
+      category,
+      date,
+      time,
+      venue,
+      registrationDeadline,
+      capacity,
+      coordinatorId,
+      image,
+    } = req.body;
 
     if (!title || !description || !category || !date || !time || !venue || !registrationDeadline || !capacity || !coordinatorId) {
       return res.status(400).json({ error: 'Please fill in all mandatory event fields.' });
     }
 
-    const event = await Event.create({
+    const insertSql = `
+      INSERT INTO events (title, description, category, date, time, venue, registration_deadline, capacity, coordinator_id, image)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+      RETURNING *
+    `;
+
+    const defaultImg = 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&auto=format&fit=crop&q=60';
+    const result = await query(insertSql, [
       title,
       description,
-      category: category.toLowerCase(),
+      category.toLowerCase(),
       date,
       time,
       venue,
       registrationDeadline,
-      capacity: Number(capacity),
-      coordinator: coordinatorId,
-      image: image || 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&auto=format&fit=crop&q=60',
-    });
+      parseInt(capacity, 10),
+      parseInt(coordinatorId, 10),
+      image || defaultImg,
+    ]);
 
-    res.status(201).json({ message: 'Event published successfully!', event });
+    // Fetch newly created event with coordinator info
+    const fullRes = await query(`${EVENT_SELECT_SQL} WHERE e.id = $1`, [result.rows[0].id]);
+    res.status(201).json({
+      message: 'Event published successfully!',
+      event: formatEvent(fullRes.rows[0]),
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -73,12 +118,18 @@ router.post('/', async (req, res) => {
 // 4. Delete an event
 router.delete('/:id', async (req, res) => {
   try {
-    const event = await Event.findById(req.params.id);
-    if (!event) return res.status(404).json({ error: 'Event not found.' });
+    const eventId = parseInt(req.params.id, 10);
+    if (isNaN(eventId)) {
+      return res.status(400).json({ error: 'Invalid event ID.' });
+    }
 
-    // Clean up any registrations for this event
-    await Registration.deleteMany({ event: event._id });
-    await event.deleteOne();
+    // CASCADE delete deletes registrations automatically, but explicit delete ensures clarity
+    await query('DELETE FROM registrations WHERE event_id = $1', [eventId]);
+    const result = await query('DELETE FROM events WHERE id = $1 RETURNING *', [eventId]);
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: 'Event not found.' });
+    }
 
     res.json({ message: 'Event and associated registrations deleted successfully.' });
   } catch (err) {
