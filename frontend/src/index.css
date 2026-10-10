@@ -2,7 +2,229 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.06) 100%);
+  --glass-border: rgba(255, 255, 255, 0.35);
+  --glass-blur: blur(20px) saturate(180%);
+}
+
 body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  background-color: #f8fafc;
+  color: #ffffff;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  background-color: #3b28cc;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.35);
+}
+
+
+/* Flutter 3D Tubular Curves Background Canvas */
+.flutter-bg-canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background-color: #3824c9;
+  background-image: 
+    radial-gradient(circle at 50% 30%, #472fdb 0%, #2f1cb0 70%, #241496 100%);
+  overflow: hidden;
+}
+
+/* Flutter Glassmorphism Master Card (From Felipe Santos Reference) */
+.flutter-glass {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.05) 100%);
+  backdrop-filter: blur(22px) saturate(190%);
+  -webkit-backdrop-filter: blur(22px) saturate(190%);
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 
+    0 25px 50px -12px rgba(25, 10, 80, 0.45),
+    inset 1px 1px 1.5px 0 rgba(255, 255, 255, 0.65),
+    inset -1px -1px 1.5px 0 rgba(255, 255, 255, 0.1);
+  border-radius: 32px;
+}
+
+/* Flutter Nested Sub-cards (e.g., Calories, Heart, Sleeping cards) */
+.flutter-glass-sub {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.04) 100%);
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  box-shadow: 
+    0 10px 25px rgba(20, 10, 70, 0.25),
+    inset 0.8px 0.8px 1px 0 rgba(255, 255, 255, 0.5);
+  border-radius: 22px;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.flutter-glass-sub:hover {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.08) 100%);
+  border-color: rgba(255, 255, 255, 0.45);
+  transform: translateY(-2px);
+  box-shadow: 
+    0 16px 35px rgba(20, 10, 70, 0.35),
+    inset 1px 1px 1.5px 0 rgba(255, 255, 255, 0.7);
+}
+
+/* Flutter Crisp Solid White Pill Button (Reference Active Element) */
+.flutter-white-pill {
+  background: #ffffff;
+  color: #2e1ca8;
+  font-weight: 800;
+  border-radius: 9999px;
+  box-shadow: 0 8px 20px rgba(18, 8, 65, 0.35);
+  transition: all 0.2s ease-in-out;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+}
+
+.flutter-white-pill:hover {
+  background: #f8fafc;
+  transform: scale(1.03);
+  box-shadow: 0 10px 25px rgba(18, 8, 65, 0.45);
+}
+
+/* Flutter Frosted Pill Button (Inactive / Secondary) */
+.flutter-glass-pill {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  font-weight: 600;
+  border-radius: 9999px;
+  box-shadow: inset 0.5px 0.5px 1px rgba(255, 255, 255, 0.4);
+  transition: all 0.2s ease-in-out;
+}
+
+.flutter-glass-pill:hover {
+  background: rgba(255, 255, 255, 0.22);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #ffffff;
+}
+
+/* Flutter Glass Form Inputs */
+.flutter-glass-input {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  font-weight: 500;
+  outline: none;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+  border-radius: 18px;
+  transition: all 0.2s ease-in-out;
+}
+
+.flutter-glass-input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.flutter-glass-input:focus {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.65);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.25);
+}
+
+/* Backward compatible aliases so all pages look great immediately */
+.glass-panel {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.05) 100%);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1.5px solid rgba(255, 255, 255, 0.32);
+  box-shadow: 0 20px 45px rgba(20, 10, 75, 0.35), inset 1px 1px 1px rgba(255, 255, 255, 0.6);
+  border-radius: 28px;
+}
+
+.glass-card, .glass-card-inner {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.04) 100%);
+  backdrop-filter: blur(16px) saturate(170%);
+  -webkit-backdrop-filter: blur(16px) saturate(170%);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  box-shadow: 0 12px 30px rgba(20, 10, 70, 0.25), inset 0.8px 0.8px 1px rgba(255, 255, 255, 0.5);
+  border-radius: 24px;
+}
+
+.glass-btn-accent {
+  background: #ffffff;
+  color: #2e1ca8;
+  font-weight: 800;
+  border-radius: 9999px;
+  box-shadow: 0 6px 18px rgba(18, 8, 65, 0.35);
+  transition: all 0.2s ease-in-out;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+}
+
+.glass-btn-accent:hover {
+  background: #f1f5f9;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(18, 8, 65, 0.45);
+}
+
+.glass-btn-primary {
+  background: #ffffff;
+  color: #2e1ca8;
+  font-weight: 800;
+  border-radius: 9999px;
+  box-shadow: 0 6px 18px rgba(18, 8, 65, 0.35);
+  transition: all 0.2s ease-in-out;
+}
+
+.glass-btn-secondary {
+  background: rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  font-weight: 700;
+  box-shadow: inset 0.5px 0.5px 1px rgba(255, 255, 255, 0.4);
+  border-radius: 9999px;
+  transition: all 0.2s ease-in-out;
+}
+
+.glass-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.45);
+}
+
+.glass-input {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  font-weight: 500;
+  border-radius: 16px;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.15);
+}
+
+.glass-input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.glass-input:focus {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+/* Scrollbar polish */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(46, 28, 168, 0.4);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
 }

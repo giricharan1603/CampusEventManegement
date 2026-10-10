@@ -1,73 +1,104 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { Bell, User as UserIcon, Sparkles } from 'lucide-react';
 
 export const Navbar = ({ user, onLogout }) => {
   const navigate = useNavigate();
 
   return (
-    <nav className="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
-      <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-        {/* Brand */}
-        <Link to="/" className="flex items-center space-x-2">
-          <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white font-black text-lg shadow-sm">
-            C
+    <header className="flutter-glass px-6 py-3.5 flex items-center justify-between gap-4">
+      {/* Brand & Page Identity */}
+      <div className="flex items-center space-x-6">
+        <Link to="/" className="flex items-center space-x-3 group">
+          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-400 via-orange-500 to-rose-500 flex items-center justify-center text-white font-black text-xl shadow-md border border-white/40 group-hover:scale-105 transition-transform">
+            ⚡
           </div>
           <div>
-            <span className="font-extrabold text-slate-900 tracking-tight block text-base leading-none">
-              Campus Events
-            </span>
-            <span className="text-[10px] text-slate-500 font-semibold tracking-wider uppercase">
-              Student Portal
+            <div className="flex items-center gap-2">
+              <span className="font-extrabold text-white tracking-tight text-lg leading-none">
+                Campus Portal
+              </span>
+              <span className="hidden sm:inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold bg-white/20 text-white border border-white/30 backdrop-blur-md">
+                Active
+              </span>
+            </div>
+            <span className="text-[11px] text-white/80 font-medium">
+              Event Hub & Registrations
             </span>
           </div>
         </Link>
 
-        {/* Navigation Links */}
-        <div className="flex items-center space-x-4 text-xs font-semibold">
-          <Link to="/" className="text-slate-600 hover:text-blue-600 transition">
-            All Events
+        {/* Navigation Links in Header */}
+        <nav className="flex items-center space-x-1 sm:space-x-2">
+          <Link
+            to="/"
+            className="px-3.5 py-1.5 rounded-full text-xs font-bold text-white/90 hover:text-white hover:bg-white/10 transition"
+          >
+            Events
           </Link>
-
           {user && user.role === 'student' && (
-            <Link to="/my-events" className="text-slate-600 hover:text-blue-600 transition">
-              My Registrations
-            </Link>
-          )}
-
-          {user && (user.role === 'faculty' || user.role === 'admin') && (
-            <Link to="/manage" className="text-slate-600 hover:text-blue-600 transition">
-              Faculty / Admin Portal
-            </Link>
-          )}
-
-          {user ? (
-            <div className="flex items-center space-x-3 pl-2 border-l border-slate-200">
-              <div className="text-right">
-                <span className="block font-bold text-slate-800">{user.name}</span>
-                <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-100 text-blue-800 font-mono uppercase">
-                  {user.role}
-                </span>
-              </div>
-              <button
-                onClick={() => {
-                  onLogout();
-                  navigate('/auth');
-                }}
-                className="px-3 py-1.5 border border-slate-200 hover:bg-red-50 hover:text-red-600 rounded-lg transition"
-              >
-                Logout
-              </button>
-            </div>
-          ) : (
             <Link
-              to="/auth"
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl shadow-sm transition"
+              to="/my-events"
+              className="px-3.5 py-1.5 rounded-full text-xs font-bold text-white/90 hover:text-white hover:bg-white/10 transition"
             >
-              Sign In
+              My Passes
             </Link>
           )}
-        </div>
+          {user && (user.role === 'faculty' || user.role === 'admin') && (
+            <Link
+              to="/manage"
+              className="px-3.5 py-1.5 rounded-full text-xs font-bold text-white/90 hover:text-white hover:bg-white/10 transition"
+            >
+              Manage Events
+            </Link>
+          )}
+        </nav>
       </div>
-    </nav>
+
+      {/* Right Controls: Notification & Profile Widget */}
+      <div className="flex items-center space-x-3 text-xs">
+        {/* Notification Bell */}
+        {/* <button 
+          className="w-10 h-10 rounded-full flutter-glass-sub flex items-center justify-center text-white hover:text-white transition relative"
+          title="Notifications"
+        >
+          <Bell className="w-4 h-4" />
+          <span className="w-2 h-2 rounded-full bg-amber-400 absolute top-2.5 right-2.5 ring-2 ring-indigo-900" />
+        </button> */}
+
+        {user ? (
+          <div className="flex items-center space-x-3 pl-2 border-l border-white/20">
+            {/* User Avatar Circle */}
+            <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-yellow-300 to-amber-500 flex items-center justify-center text-indigo-950 font-black text-sm shadow-md border border-white/50">
+              {user.name?.charAt(0).toUpperCase() || 'U'}
+            </div>
+
+            <div className="hidden sm:block text-left">
+              <span className="block font-bold text-white leading-tight text-xs">{user.name}</span>
+              {/* <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/20 text-white/90 border border-white/30 font-mono uppercase font-bold">
+                {user.role}
+              </span> */}
+            </div>
+
+            <button
+              onClick={() => {
+                onLogout();
+                navigate('/auth');
+              }}
+              className="flutter-glass-pill px-4 py-2 hover:bg-rose-500/30 hover:border-rose-300 font-bold"
+            >
+              Logout
+            </button>
+          </div>
+        ) : (
+          <Link
+            to="/auth"
+            className="flutter-white-pill px-5 py-2.5 text-xs font-bold shadow-md"
+          >
+            Sign In
+          </Link>
+        )}
+      </div>
+    </header>
   );
 };

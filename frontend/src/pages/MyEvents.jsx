@@ -39,31 +39,31 @@ export const MyEvents = ({ user }) => {
 
   if (!user) {
     return (
-      <div className="py-20 text-center text-xs text-slate-500">
-        Please <Link to="/auth" className="text-blue-600 font-bold underline">sign in</Link> to view your registrations.
+      <div className="py-20 text-center text-xs text-white/80 flutter-glass p-8 max-w-md mx-auto">
+        Please <Link to="/auth" className="text-white font-bold underline">sign in</Link> to view your registrations.
       </div>
     );
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8 space-y-6">
-      <div>
-        <h1 className="text-2xl font-black text-slate-900 tracking-tight">My Event Registrations</h1>
-        <p className="text-slate-500 text-xs mt-1">
-          Student: <strong>{user.name}</strong> • Roll: <strong>{user.studentId || 'N/A'}</strong>
+    <div className="max-w-4xl mx-auto space-y-6">
+      <div className="flutter-glass p-6 sm:p-8">
+        <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">My Event Passes</h1>
+        <p className="text-white/80 text-xs mt-1.5 font-medium">
+          Student: <strong className="text-white font-bold">{user.name}</strong> • Roll ID: <strong className="text-white font-bold">{user.studentId || 'N/A'}</strong>
         </p>
       </div>
 
       {message && (
-        <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs rounded-xl font-semibold">
+        <div className="p-3 bg-emerald-500/30 border border-emerald-300 text-white text-xs rounded-2xl font-bold backdrop-blur-md">
           ✓ {message}
         </div>
       )}
 
       {loading ? (
-        <div className="py-16 text-center text-xs text-slate-400">Loading your registrations...</div>
+        <div className="py-20 text-center text-xs text-white font-bold font-mono">Loading your registrations...</div>
       ) : registrations.length > 0 ? (
-        <div className="space-y-3">
+        <div className="space-y-4">
           {registrations.map((reg) => {
             const evt = reg.event;
             if (!evt) return null;
@@ -72,24 +72,26 @@ export const MyEvents = ({ user }) => {
             return (
               <div
                 key={reg._id}
-                className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3"
+                className="flutter-glass-sub p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
               >
                 <div>
                   <div className="flex items-center space-x-2">
-                    <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-blue-50 text-blue-700">
+                    <span className="text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-full flutter-white-pill">
                       {evt.category}
                     </span>
                     <span
-                      className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${
-                        isCancelled ? 'bg-red-50 text-red-600' : 'bg-emerald-50 text-emerald-700'
+                      className={`text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-full border ${
+                        isCancelled 
+                          ? 'bg-rose-500/40 text-white border-rose-300' 
+                          : 'bg-emerald-500/40 text-white border-emerald-300'
                       }`}
                     >
                       {reg.status}
                     </span>
                   </div>
 
-                  <h3 className="font-bold text-sm text-slate-900 mt-1">{evt.title}</h3>
-                  <div className="text-xs text-slate-500 mt-1 flex flex-wrap gap-3">
+                  <h3 className="font-extrabold text-base text-white mt-2">{evt.title}</h3>
+                  <div className="text-xs text-white/90 mt-1 flex flex-wrap gap-4 font-semibold">
                     <span>📅 {new Date(evt.date).toLocaleDateString()} ({evt.time})</span>
                     <span>📍 {evt.venue}</span>
                   </div>
@@ -98,16 +100,16 @@ export const MyEvents = ({ user }) => {
                 <div className="flex items-center space-x-2 w-full sm:w-auto">
                   <Link
                     to={`/event/${evt._id}`}
-                    className="flex-1 sm:flex-initial px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold text-center"
+                    className="flex-1 sm:flex-initial px-4 py-2 flutter-white-pill text-xs font-bold text-center"
                   >
                     View
                   </Link>
                   {!isCancelled && (
                     <button
                       onClick={() => handleCancel(reg._id)}
-                      className="flex-1 sm:flex-initial px-3 py-1.5 border border-red-200 text-red-600 hover:bg-red-50 rounded-lg text-xs font-semibold text-center"
+                      className="flex-1 sm:flex-initial px-4 py-2 flutter-glass-pill hover:bg-rose-500/30 hover:border-rose-300 text-xs font-bold text-center transition"
                     >
-                      Cancel Seat
+                      Cancel Pass
                     </button>
                   )}
                 </div>
@@ -116,9 +118,9 @@ export const MyEvents = ({ user }) => {
           })}
         </div>
       ) : (
-        <div className="text-center py-16 bg-white rounded-2xl border border-slate-200 p-8">
-          <p className="text-sm font-bold text-slate-700">No event registrations found</p>
-          <Link to="/" className="mt-3 inline-block px-4 py-2 bg-blue-600 text-white rounded-xl text-xs font-bold">
+        <div className="text-center py-16 flutter-glass rounded-3xl p-8">
+          <p className="text-base font-bold text-white">No event passes found</p>
+          <Link to="/" className="mt-4 inline-block px-6 py-2.5 flutter-white-pill text-xs font-bold shadow-lg">
             Browse Campus Events
           </Link>
         </div>
