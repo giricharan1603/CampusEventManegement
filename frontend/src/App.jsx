@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
+import { BackgroundOrbs } from './components/BackgroundOrbs';
 import { EventList } from './pages/EventList';
 import { EventDetail } from './pages/EventDetail';
 import { Auth } from './pages/Auth';
@@ -13,7 +14,6 @@ export default function App() {
       const saved = localStorage.getItem('cems_user');
       if (!saved || saved === 'undefined') return null;
       const parsed = JSON.parse(saved);
-      // If legacy MongoDB 24-char ObjectId is found, clear it so user starts clean with PostgreSQL
       if (parsed?._id && typeof parsed._id === 'string' && parsed._id.length > 15) {
         localStorage.removeItem('cems_user');
         return null;
@@ -36,10 +36,17 @@ export default function App() {
 
   return (
     <Router>
-      <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col font-sans">
-        <Navbar user={user} onLogout={handleLogout} />
+      <div className="min-h-screen bg-[#07070a] text-slate-100 flex flex-col font-sans relative selection:bg-blue-500 selection:text-white">
+        {/* 3D Orb Background layer */}
+        <BackgroundOrbs />
 
-        <main className="flex-1">
+        {/* Top Glass Navigation */}
+        <div className="relative z-50">
+          <Navbar user={user} onLogout={handleLogout} />
+        </div>
+
+        {/* Page Content View */}
+        <main className="flex-1 relative z-10">
           <Routes>
             <Route path="/" element={<EventList />} />
             <Route path="/event/:id" element={<EventDetail user={user} />} />
@@ -50,8 +57,9 @@ export default function App() {
           </Routes>
         </main>
 
-        <footer className="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-400">
-          Campus Event Management System 
+        {/* Dark Glass Footer */}
+        <footer className="relative z-10 border-t border-white/10 bg-black/40 backdrop-blur-md py-6 text-center text-xs text-slate-500">
+          Campus Event Management System • Modern Glassmorphism Edition
         </footer>
       </div>
     </Router>

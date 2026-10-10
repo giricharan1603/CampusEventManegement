@@ -114,34 +114,36 @@ export const FacultyAdmin = ({ user }) => {
 
   if (!user || (user.role !== 'faculty' && user.role !== 'admin')) {
     return (
-      <div className="py-20 text-center text-xs text-slate-500">
-        Access restricted to faculty coordinators and system administrators.
+      <div className="py-24 text-center glass-panel rounded-3xl max-w-md mx-auto my-12 p-8">
+        <p className="text-slate-300 text-xs">
+          Access restricted to faculty coordinators and system administrators.
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8 space-y-8">
+    <div className="max-w-6xl mx-auto px-4 py-10 space-y-8">
       {/* Header */}
-      <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm flex flex-col sm:flex-row justify-between sm:items-center gap-2">
+      <div className="glass-panel p-6 sm:p-8 rounded-[32px] flex flex-col sm:flex-row justify-between sm:items-center gap-3">
         <div>
-          <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-amber-100 text-amber-800">
+          <span className="text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-400/30">
             {user.role} Dashboard
           </span>
-          <h1 className="text-2xl font-black text-slate-900 tracking-tight mt-1">
+          <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight mt-2">
             {user.name}'s Management Portal
           </h1>
-          <p className="text-xs text-slate-500">{user.department}</p>
+          <p className="text-xs text-slate-400 mt-1">{user.department}</p>
         </div>
       </div>
 
       {message && (
-        <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs rounded-xl font-semibold">
+        <div className="p-3.5 bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs rounded-2xl font-semibold backdrop-blur-md">
           ✓ {message}
         </div>
       )}
       {error && (
-        <div className="p-3 bg-red-50 border border-red-200 text-red-800 text-xs rounded-xl font-semibold">
+        <div className="p-3.5 bg-red-500/20 border border-red-500/40 text-red-300 text-xs rounded-2xl font-semibold backdrop-blur-md">
           ⚠ {error}
         </div>
       )}
@@ -149,31 +151,31 @@ export const FacultyAdmin = ({ user }) => {
       {/* Grid: Create Event Form & Master Events Table */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Create Event Form */}
-        <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
-          <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider">
+        <div className="glass-panel p-6 sm:p-7 rounded-[32px] space-y-4">
+          <h2 className="text-xs font-bold text-slate-300 uppercase tracking-wider">
             Publish New Event
           </h2>
 
-          <form onSubmit={handleCreateEvent} className="space-y-3 text-xs">
+          <form onSubmit={handleCreateEvent} className="space-y-3.5 text-xs">
             <div>
-              <label className="block font-semibold text-slate-700 mb-1">Event Title *</label>
+              <label className="block font-semibold text-slate-300 mb-1">Event Title *</label>
               <input
                 type="text"
                 required
                 value={form.title}
                 onChange={(e) => setForm({ ...form, title: e.target.value })}
                 placeholder="e.g. Robotics Symposium"
-                className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500"
+                className="glass-input w-full px-3.5 py-2.5 rounded-2xl outline-none"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="block font-semibold text-slate-700 mb-1">Category *</label>
+                <label className="block font-semibold text-slate-300 mb-1">Category *</label>
                 <select
                   value={form.category}
                   onChange={(e) => setForm({ ...form, category: e.target.value })}
-                  className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                  className="glass-input w-full px-3.5 py-2.5 rounded-2xl outline-none"
                 >
                   <option value="technical">Technical</option>
                   <option value="cultural">Cultural</option>
@@ -183,81 +185,81 @@ export const FacultyAdmin = ({ user }) => {
               </div>
 
               <div>
-                <label className="block font-semibold text-slate-700 mb-1">Capacity *</label>
+                <label className="block font-semibold text-slate-300 mb-1">Capacity *</label>
                 <input
                   type="number"
                   min="1"
                   required
                   value={form.capacity}
                   onChange={(e) => setForm({ ...form, capacity: e.target.value })}
-                  className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500"
+                  className="glass-input w-full px-3.5 py-2.5 rounded-2xl outline-none"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block font-semibold text-slate-700 mb-1">Description *</label>
+              <label className="block font-semibold text-slate-300 mb-1">Description *</label>
               <textarea
                 rows="2"
                 required
                 value={form.description}
                 onChange={(e) => setForm({ ...form, description: e.target.value })}
                 placeholder="Brief event details and rules..."
-                className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500"
+                className="glass-input w-full px-3.5 py-2.5 rounded-2xl outline-none"
               ></textarea>
             </div>
 
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="block font-semibold text-slate-700 mb-1">Event Date *</label>
+                <label className="block font-semibold text-slate-300 mb-1">Event Date *</label>
                 <input
                   type="date"
                   required
                   value={form.date}
                   onChange={(e) => setForm({ ...form, date: e.target.value })}
-                  className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500"
+                  className="glass-input w-full px-3.5 py-2.5 rounded-2xl outline-none"
                 />
               </div>
               <div>
-                <label className="block font-semibold text-slate-700 mb-1">Time *</label>
+                <label className="block font-semibold text-slate-300 mb-1">Time *</label>
                 <input
                   type="text"
                   required
                   value={form.time}
                   onChange={(e) => setForm({ ...form, time: e.target.value })}
                   placeholder="10:00 AM"
-                  className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500"
+                  className="glass-input w-full px-3.5 py-2.5 rounded-2xl outline-none"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="block font-semibold text-slate-700 mb-1">Venue *</label>
+                <label className="block font-semibold text-slate-300 mb-1">Venue *</label>
                 <input
                   type="text"
                   required
                   value={form.venue}
                   onChange={(e) => setForm({ ...form, venue: e.target.value })}
                   placeholder="Auditorium"
-                  className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500"
+                  className="glass-input w-full px-3.5 py-2.5 rounded-2xl outline-none"
                 />
               </div>
               <div>
-                <label className="block font-semibold text-slate-700 mb-1">Deadline *</label>
+                <label className="block font-semibold text-slate-300 mb-1">Deadline *</label>
                 <input
                   type="date"
                   required
                   value={form.registrationDeadline}
                   onChange={(e) => setForm({ ...form, registrationDeadline: e.target.value })}
-                  className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500"
+                  className="glass-input w-full px-3.5 py-2.5 rounded-2xl outline-none"
                 />
               </div>
             </div>
 
             <button
               type="submit"
-              className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold transition shadow-sm"
+              className="w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-2xl font-bold transition shadow-lg shadow-blue-500/30 border border-blue-400/30 hover:scale-[1.01] mt-2"
             >
               Publish Event
             </button>
@@ -265,44 +267,44 @@ export const FacultyAdmin = ({ user }) => {
         </div>
 
         {/* Master Events Table */}
-        <div className="lg:col-span-2 bg-white rounded-3xl border border-slate-200 shadow-sm p-6 space-y-4">
-          <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider">
+        <div className="lg:col-span-2 glass-panel rounded-[32px] p-6 sm:p-7 space-y-4">
+          <h2 className="text-xs font-bold text-slate-300 uppercase tracking-wider">
             Managed Campus Events ({events.length})
           </h2>
 
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="border-b border-slate-200 text-slate-400 font-semibold uppercase text-[10px]">
+              <thead className="border-b border-white/10 text-slate-400 font-semibold uppercase text-[10px]">
                 <tr>
-                  <th className="py-2.5">Title</th>
-                  <th className="py-2.5">Date</th>
-                  <th className="py-2.5">Signups</th>
-                  <th className="py-2.5 text-right">Actions</th>
+                  <th className="py-3">Title</th>
+                  <th className="py-3">Date</th>
+                  <th className="py-3">Signups</th>
+                  <th className="py-3 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-white/5">
                 {events.map((evt) => (
-                  <tr key={evt._id} className="hover:bg-slate-50 transition">
-                    <td className="py-3 font-bold text-slate-800">
+                  <tr key={evt._id} className="hover:bg-white/5 transition">
+                    <td className="py-3 font-bold text-white">
                       {evt.title}
-                      <span className="block text-[10px] text-slate-400 font-normal uppercase">{evt.category}</span>
+                      <span className="block text-[10px] text-cyan-300 font-normal uppercase">{evt.category}</span>
                     </td>
-                    <td className="py-3 text-slate-500">
+                    <td className="py-3 text-slate-400">
                       {new Date(evt.date).toLocaleDateString()}
                     </td>
-                    <td className="py-3 font-semibold text-slate-700">
+                    <td className="py-3 font-semibold text-slate-200">
                       {evt.registeredCount} / {evt.capacity}
                     </td>
                     <td className="py-3 text-right space-x-2">
                       <button
                         onClick={() => handleViewRoster(evt)}
-                        className="px-2.5 py-1 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-lg font-semibold"
+                        className="px-3 py-1 bg-blue-500/20 text-blue-300 hover:bg-blue-500/30 border border-blue-400/30 rounded-xl font-semibold transition"
                       >
                         Roster
                       </button>
                       <button
                         onClick={() => handleDeleteEvent(evt._id, evt.title)}
-                        className="px-2.5 py-1 text-red-600 hover:bg-red-50 rounded-lg font-semibold"
+                        className="px-3 py-1 bg-red-500/20 text-red-300 hover:bg-red-500/30 border border-red-500/30 rounded-xl font-semibold transition"
                       >
                         Delete
                       </button>
@@ -317,19 +319,19 @@ export const FacultyAdmin = ({ user }) => {
 
       {/* Attendee Roster Modal / Section */}
       {selectedEventRoster && (
-        <div className="bg-white p-6 rounded-3xl border border-blue-200 shadow-sm space-y-4">
-          <div className="flex justify-between items-center border-b border-slate-100 pb-3">
+        <div className="glass-panel p-6 sm:p-8 rounded-[32px] border border-cyan-400/30 shadow-2xl space-y-4">
+          <div className="flex justify-between items-center border-b border-white/10 pb-3">
             <div>
-              <h3 className="font-bold text-base text-slate-900">
+              <h3 className="font-bold text-base text-white">
                 Participant Roster: {selectedEventRoster.title}
               </h3>
-              <p className="text-xs text-slate-500">
-                Total Registered: <strong>{rosterAttendees.length}</strong> students
+              <p className="text-xs text-slate-400">
+                Total Registered: <strong className="text-cyan-300">{rosterAttendees.length}</strong> students
               </p>
             </div>
             <button
               onClick={() => setSelectedEventRoster(null)}
-              className="text-xs text-slate-400 hover:text-slate-800 font-bold"
+              className="text-xs text-slate-400 hover:text-white font-bold px-3 py-1 rounded-xl bg-white/5"
             >
               ✕ Close Roster
             </button>
@@ -338,24 +340,24 @@ export const FacultyAdmin = ({ user }) => {
           {rosterAttendees.length > 0 ? (
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
-                <thead className="border-b border-slate-200 text-slate-400 uppercase text-[10px]">
+                <thead className="border-b border-white/10 text-slate-400 uppercase text-[10px]">
                   <tr>
-                    <th className="py-2">Student Name</th>
-                    <th className="py-2">Roll Number</th>
-                    <th className="py-2">Department</th>
-                    <th className="py-2">Email</th>
-                    <th className="py-2">Status</th>
+                    <th className="py-2.5">Student Name</th>
+                    <th className="py-2.5">Roll Number</th>
+                    <th className="py-2.5">Department</th>
+                    <th className="py-2.5">Email</th>
+                    <th className="py-2.5">Status</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-white/5">
                   {rosterAttendees.map((a) => (
-                    <tr key={a._id}>
-                      <td className="py-2.5 font-bold text-slate-800">{a.student?.name}</td>
-                      <td className="py-2.5 font-mono text-slate-600">{a.student?.studentId || '—'}</td>
-                      <td className="py-2.5 text-slate-600">{a.student?.department}</td>
-                      <td className="py-2.5 text-slate-500">{a.student?.email}</td>
+                    <tr key={a._id} className="hover:bg-white/5 transition">
+                      <td className="py-2.5 font-bold text-white">{a.student?.name}</td>
+                      <td className="py-2.5 font-mono text-cyan-300">{a.student?.studentId || '—'}</td>
+                      <td className="py-2.5 text-slate-300">{a.student?.department}</td>
+                      <td className="py-2.5 text-slate-400">{a.student?.email}</td>
                       <td className="py-2.5">
-                        <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">
+                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
                           {a.status}
                         </span>
                       </td>
@@ -365,21 +367,21 @@ export const FacultyAdmin = ({ user }) => {
               </table>
             </div>
           ) : (
-            <p className="text-xs text-slate-400 py-4 text-center">No students registered yet for this event.</p>
+            <p className="text-xs text-slate-400 py-6 text-center">No students registered yet for this event.</p>
           )}
         </div>
       )}
 
       {/* Admin User Management Section */}
       {user.role === 'admin' && (
-        <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
-          <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider">
+        <div className="glass-panel p-6 sm:p-8 rounded-[32px] space-y-4">
+          <h2 className="text-xs font-bold text-slate-300 uppercase tracking-wider">
             Admin: User Directory & Role Assignment ({users.length})
           </h2>
 
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="border-b border-slate-200 text-slate-400 font-semibold uppercase text-[10px]">
+              <thead className="border-b border-white/10 text-slate-400 font-semibold uppercase text-[10px]">
                 <tr>
                   <th className="py-2.5">Name</th>
                   <th className="py-2.5">Email</th>
@@ -388,14 +390,14 @@ export const FacultyAdmin = ({ user }) => {
                   <th className="py-2.5 text-right">Switch Role</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-white/5">
                 {users.map((u) => (
-                  <tr key={u._id}>
-                    <td className="py-2.5 font-bold text-slate-800">{u.name}</td>
-                    <td className="py-2.5 text-slate-500">{u.email}</td>
-                    <td className="py-2.5 text-slate-600">{u.department}</td>
+                  <tr key={u._id} className="hover:bg-white/5 transition">
+                    <td className="py-2.5 font-bold text-white">{u.name}</td>
+                    <td className="py-2.5 text-slate-400">{u.email}</td>
+                    <td className="py-2.5 text-slate-300">{u.department}</td>
                     <td className="py-2.5">
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-mono uppercase bg-slate-100 text-slate-700">
+                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase bg-white/10 text-slate-200 border border-white/10">
                         {u.role}
                       </span>
                     </td>
@@ -403,7 +405,7 @@ export const FacultyAdmin = ({ user }) => {
                       <select
                         value={u.role}
                         onChange={(e) => handleRoleChange(u._id, e.target.value)}
-                        className="px-2 py-1 border border-slate-200 rounded-lg text-xs outline-none bg-white"
+                        className="glass-input px-3 py-1 rounded-xl text-xs outline-none"
                       >
                         <option value="student">student</option>
                         <option value="faculty">faculty</option>

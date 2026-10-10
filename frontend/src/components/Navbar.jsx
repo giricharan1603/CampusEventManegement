@@ -5,46 +5,55 @@ export const Navbar = ({ user, onLogout }) => {
   const navigate = useNavigate();
 
   return (
-    <nav className="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+    <nav className="bg-black/35 backdrop-blur-xl border-b border-white/10 sticky top-0 z-50 shadow-2xl">
       <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
         {/* Brand */}
-        <Link to="/" className="flex items-center space-x-2">
-          <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white font-black text-lg shadow-sm">
+        <Link to="/" className="flex items-center space-x-3 group">
+          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 to-cyan-400 flex items-center justify-center text-white font-black text-lg shadow-lg shadow-blue-500/30 group-hover:scale-105 transition">
             C
           </div>
           <div>
-            <span className="font-extrabold text-slate-900 tracking-tight block text-base leading-none">
+            <span className="font-black text-white tracking-tight block text-base leading-none group-hover:text-blue-400 transition">
               Campus Events
             </span>
-            <span className="text-[10px] text-slate-500 font-semibold tracking-wider uppercase">
-              Student Portal
+            <span className="text-[10px] text-slate-400 font-semibold tracking-widest uppercase">
+              Glassmorphism Portal
             </span>
           </div>
         </Link>
 
         {/* Navigation Links */}
-        <div className="flex items-center space-x-4 text-xs font-semibold">
-          <Link to="/" className="text-slate-600 hover:text-blue-600 transition">
+        <div className="flex items-center space-x-4 text-xs font-medium">
+          <Link 
+            to="/" 
+            className="text-slate-300 hover:text-white hover:bg-white/5 px-3 py-1.5 rounded-xl transition"
+          >
             All Events
           </Link>
 
           {user && user.role === 'student' && (
-            <Link to="/my-events" className="text-slate-600 hover:text-blue-600 transition">
+            <Link 
+              to="/my-events" 
+              className="text-slate-300 hover:text-white hover:bg-white/5 px-3 py-1.5 rounded-xl transition"
+            >
               My Registrations
             </Link>
           )}
 
           {user && (user.role === 'faculty' || user.role === 'admin') && (
-            <Link to="/manage" className="text-slate-600 hover:text-blue-600 transition">
+            <Link 
+              to="/manage" 
+              className="text-slate-300 hover:text-white hover:bg-white/5 px-3 py-1.5 rounded-xl transition"
+            >
               Faculty / Admin Portal
             </Link>
           )}
 
           {user ? (
-            <div className="flex items-center space-x-3 pl-2 border-l border-slate-200">
+            <div className="flex items-center space-x-3 pl-3 border-l border-white/10">
               <div className="text-right">
-                <span className="block font-bold text-slate-800">{user.name}</span>
-                <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-100 text-blue-800 font-mono uppercase">
+                <span className="block font-bold text-white text-xs">{user.name}</span>
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-400/30 font-mono uppercase">
                   {user.role}
                 </span>
               </div>
@@ -53,7 +62,7 @@ export const Navbar = ({ user, onLogout }) => {
                   onLogout();
                   navigate('/auth');
                 }}
-                className="px-3 py-1.5 border border-slate-200 hover:bg-red-50 hover:text-red-600 rounded-lg transition"
+                className="px-3 py-1.5 border border-white/15 bg-white/5 hover:bg-red-500/20 hover:text-red-400 hover:border-red-500/40 text-slate-300 rounded-xl transition text-xs font-semibold"
               >
                 Logout
               </button>
@@ -61,7 +70,7 @@ export const Navbar = ({ user, onLogout }) => {
           ) : (
             <Link
               to="/auth"
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl shadow-sm transition"
+              className="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold rounded-xl shadow-lg shadow-blue-500/25 border border-blue-400/30 hover:scale-[1.02] transition"
             >
               Sign In
             </Link>

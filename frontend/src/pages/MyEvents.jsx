@@ -39,31 +39,44 @@ export const MyEvents = ({ user }) => {
 
   if (!user) {
     return (
-      <div className="py-20 text-center text-xs text-slate-500">
-        Please <Link to="/auth" className="text-blue-600 font-bold underline">sign in</Link> to view your registrations.
+      <div className="py-24 text-center glass-panel rounded-3xl max-w-md mx-auto my-12 p-8">
+        <p className="text-slate-300 text-xs">
+          Please <Link to="/auth" className="text-blue-400 font-bold underline">sign in</Link> to view your registrations.
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8 space-y-6">
-      <div>
-        <h1 className="text-2xl font-black text-slate-900 tracking-tight">My Event Registrations</h1>
-        <p className="text-slate-500 text-xs mt-1">
-          Student: <strong>{user.name}</strong> • Roll: <strong>{user.studentId || 'N/A'}</strong>
-        </p>
+    <div className="max-w-4xl mx-auto px-4 py-10 space-y-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">My Event Registrations</h1>
+          <p className="text-slate-400 text-xs mt-1">
+            Student: <strong className="text-white">{user.name}</strong> • Roll: <strong className="text-cyan-300 font-mono">{user.studentId || 'N/A'}</strong>
+          </p>
+        </div>
+        <Link 
+          to="/" 
+          className="px-4 py-2 rounded-2xl glass-pill text-xs font-semibold text-slate-300 hover:text-white transition"
+        >
+          + Explore More Events
+        </Link>
       </div>
 
       {message && (
-        <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs rounded-xl font-semibold">
+        <div className="p-3.5 bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs rounded-2xl font-semibold backdrop-blur-md">
           ✓ {message}
         </div>
       )}
 
       {loading ? (
-        <div className="py-16 text-center text-xs text-slate-400">Loading your registrations...</div>
+        <div className="py-20 text-center text-xs text-slate-400 glass-panel rounded-3xl">
+          <div className="inline-block w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mb-3"></div>
+          <div>Loading your registrations...</div>
+        </div>
       ) : registrations.length > 0 ? (
-        <div className="space-y-3">
+        <div className="space-y-4">
           {registrations.map((reg) => {
             const evt = reg.event;
             if (!evt) return null;
@@ -72,40 +85,42 @@ export const MyEvents = ({ user }) => {
             return (
               <div
                 key={reg._id}
-                className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3"
+                className="glass-panel-interactive p-5 rounded-3xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
               >
                 <div>
                   <div className="flex items-center space-x-2">
-                    <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-blue-50 text-blue-700">
+                    <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-400/30">
                       {evt.category}
                     </span>
                     <span
-                      className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${
-                        isCancelled ? 'bg-red-50 text-red-600' : 'bg-emerald-50 text-emerald-700'
+                      className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full border ${
+                        isCancelled 
+                          ? 'bg-red-500/20 text-red-300 border-red-500/30' 
+                          : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
                       }`}
                     >
                       {reg.status}
                     </span>
                   </div>
 
-                  <h3 className="font-bold text-sm text-slate-900 mt-1">{evt.title}</h3>
-                  <div className="text-xs text-slate-500 mt-1 flex flex-wrap gap-3">
+                  <h3 className="font-bold text-base text-white mt-2">{evt.title}</h3>
+                  <div className="text-xs text-slate-400 mt-1.5 flex flex-wrap gap-4 font-medium">
                     <span>📅 {new Date(evt.date).toLocaleDateString()} ({evt.time})</span>
                     <span>📍 {evt.venue}</span>
                   </div>
                 </div>
 
-                <div className="flex items-center space-x-2 w-full sm:w-auto">
+                <div className="flex items-center space-x-2.5 w-full sm:w-auto">
                   <Link
                     to={`/event/${evt._id}`}
-                    className="flex-1 sm:flex-initial px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold text-center"
+                    className="flex-1 sm:flex-initial px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs font-semibold text-center transition"
                   >
                     View
                   </Link>
                   {!isCancelled && (
                     <button
                       onClick={() => handleCancel(reg._id)}
-                      className="flex-1 sm:flex-initial px-3 py-1.5 border border-red-200 text-red-600 hover:bg-red-50 rounded-lg text-xs font-semibold text-center"
+                      className="flex-1 sm:flex-initial px-4 py-2 border border-red-500/40 text-red-400 hover:bg-red-500/20 rounded-xl text-xs font-semibold text-center transition"
                     >
                       Cancel Seat
                     </button>
@@ -116,9 +131,13 @@ export const MyEvents = ({ user }) => {
           })}
         </div>
       ) : (
-        <div className="text-center py-16 bg-white rounded-2xl border border-slate-200 p-8">
-          <p className="text-sm font-bold text-slate-700">No event registrations found</p>
-          <Link to="/" className="mt-3 inline-block px-4 py-2 bg-blue-600 text-white rounded-xl text-xs font-bold">
+        <div className="text-center py-20 glass-panel rounded-3xl p-8">
+          <p className="text-base font-bold text-white">No event registrations found</p>
+          <p className="text-xs text-slate-400 mt-1">You haven't reserved a seat for any campus events yet.</p>
+          <Link 
+            to="/" 
+            className="mt-4 inline-block px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl text-xs font-bold shadow-lg shadow-blue-500/30 transition hover:scale-105"
+          >
             Browse Campus Events
           </Link>
         </div>

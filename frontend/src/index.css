@@ -2,7 +2,207 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --bg-dark: #07070a;
+  --glass-bg: rgba(18, 20, 29, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-border-hover: rgba(255, 255, 255, 0.25);
+  --glass-blur: 24px;
+}
+
 body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  background-color: #f8fafc;
+  background-color: var(--bg-dark);
+  color: #f1f5f9;
+  min-height: 100vh;
+  margin: 0;
+  overflow-x: hidden;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #090a0f;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* 3D Glossy Sphere Styles matching reference image */
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.orb-glossy {
+  /* Ultra-realistic 3D sphere gradient with specular glint & dark iridescent rim */
+  background: radial-gradient(
+    circle at 35% 28%,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(180, 210, 240, 0.6) 12%,
+    rgba(70, 95, 140, 0.4) 25%,
+    rgba(18, 22, 35, 0.9) 55%,
+    rgba(7, 8, 12, 1) 80%,
+    rgba(2, 2, 4, 1) 100%
+  );
+  box-shadow: 
+    inset -15px -15px 35px rgba(0, 195, 255, 0.22),
+    inset 12px 12px 25px rgba(255, 255, 255, 0.25),
+    inset -2px -2px 12px rgba(120, 240, 180, 0.18),
+    0 30px 80px rgba(0, 0, 0, 0.95),
+    0 10px 25px rgba(0, 0, 0, 0.8);
+}
+
+/* Orb Positions and Scales */
+.orb-tl {
+  width: 260px;
+  height: 260px;
+  top: 4%;
+  left: 6%;
+}
+
+.orb-tr {
+  width: 280px;
+  height: 280px;
+  top: 2%;
+  right: 18%;
+}
+
+.orb-mr {
+  width: 420px;
+  height: 420px;
+  top: 38%;
+  right: -60px;
+}
+
+.orb-bl {
+  width: 220px;
+  height: 220px;
+  bottom: 8%;
+  left: 14%;
+}
+
+.orb-bc {
+  width: 170px;
+  height: 170px;
+  bottom: 2%;
+  left: 46%;
+}
+
+.orb-ml {
+  width: 75px;
+  height: 75px;
+  top: 40%;
+  left: 3%;
+}
+
+/* Float Animations */
+@keyframes orbFloatSlow {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+  }
+  50% {
+    transform: translateY(-16px) scale(1.02);
+  }
+}
+
+@keyframes orbFloatMedium {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+  }
+  50% {
+    transform: translateY(-22px) scale(1.03);
+  }
+}
+
+@keyframes orbFloatFast {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+  }
+  50% {
+    transform: translateY(-12px) scale(1.01);
+  }
+}
+
+.animate-float-slow {
+  animation: orbFloatSlow 9s ease-in-out infinite;
+}
+
+.animate-float-medium {
+  animation: orbFloatMedium 7s ease-in-out infinite;
+}
+
+.animate-float-fast {
+  animation: orbFloatFast 5.5s ease-in-out infinite;
+}
+
+/* Glassmorphism System Components */
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  box-shadow: 
+    0 25px 50px -12px rgba(0, 0, 0, 0.7),
+    inset 0 1px 1px rgba(255, 255, 255, 0.15);
+}
+
+.glass-panel-interactive {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  box-shadow: 
+    0 20px 40px -10px rgba(0, 0, 0, 0.6),
+    inset 0 1px 1px rgba(255, 255, 255, 0.15);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-panel-interactive:hover {
+  border-color: var(--glass-border-hover);
+  box-shadow: 
+    0 25px 60px -10px rgba(0, 0, 0, 0.8),
+    0 0 25px rgba(59, 130, 246, 0.15),
+    inset 0 1px 2px rgba(255, 255, 255, 0.25);
+  transform: translateY(-3px);
+}
+
+.glass-input {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: all 0.2s ease;
+}
+
+.glass-input:focus {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(96, 165, 250, 0.6);
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.25);
+}
+
+.glass-input option {
+  background-color: #0f131f;
+  color: #ffffff;
+}
+
+.glass-pill {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(10px);
+}
+
+.glass-pill-active {
+  background: rgba(37, 99, 235, 0.85);
+  border: 1px solid rgba(96, 165, 250, 0.6);
+  box-shadow: 0 0 16px rgba(37, 99, 235, 0.45);
 }

@@ -34,38 +34,45 @@ export const EventList = () => {
   });
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8 space-y-8">
-      {/* Hero Welcome */}
-      <div className="text-center py-6">
-        <h1 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
+    <div className="max-w-6xl mx-auto px-4 py-10 space-y-8">
+      {/* Hero Welcome with Glass Accent */}
+      <div className="text-center py-6 relative">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/5 border border-white/15 text-[11px] font-semibold text-cyan-300 tracking-wider uppercase mb-4 backdrop-blur-md shadow-inner">
+          <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
+          Campus Hub
+        </div>
+        <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight drop-shadow-md">
           Discover Campus Activities
         </h1>
-        <p className="text-slate-500 text-sm mt-2 max-w-xl mx-auto">
+        <p className="text-slate-400 text-sm mt-3 max-w-xl mx-auto leading-relaxed">
           Explore upcoming technical hackathons, cultural festivals, sports tournaments, and symposiums.
         </p>
       </div>
 
       {/* Search & Category Filter Toolbar */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm">
+      <div className="glass-panel p-4 rounded-3xl flex flex-col sm:flex-row items-center justify-between gap-4">
         {/* Search */}
-        <input
-          type="text"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search by event title, location..."
-          className="w-full sm:w-72 px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:ring-2 focus:ring-blue-500"
-        />
+        <div className="relative w-full sm:w-80">
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search events, locations..."
+            className="glass-input w-full px-4 py-2.5 rounded-2xl text-xs placeholder:text-slate-500 outline-none"
+          />
+          <span className="absolute right-3.5 top-2.5 text-slate-400 text-xs">🔍</span>
+        </div>
 
         {/* Category Pills */}
-        <div className="flex flex-wrap gap-1.5 w-full sm:w-auto">
+        <div className="flex flex-wrap gap-2 w-full sm:w-auto">
           {['all', 'technical', 'cultural', 'sports', 'academic'].map((cat) => (
             <button
               key={cat}
               onClick={() => setCategory(cat)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold capitalize transition ${
+              className={`px-4 py-2 rounded-2xl text-xs font-semibold capitalize transition ${
                 category === cat
-                  ? 'bg-blue-600 text-white shadow-sm'
-                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  ? 'glass-pill-active text-white'
+                  : 'glass-pill text-slate-300 hover:text-white hover:bg-white/10'
               }`}
             >
               {cat}
@@ -76,7 +83,10 @@ export const EventList = () => {
 
       {/* Events Grid */}
       {loading ? (
-        <div className="py-16 text-center text-xs text-slate-400">Loading campus events...</div>
+        <div className="py-24 text-center text-xs text-slate-400 glass-panel rounded-3xl">
+          <div className="inline-block w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mb-3"></div>
+          <div>Loading campus events...</div>
+        </div>
       ) : filteredEvents.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredEvents.map((evt) => {
@@ -84,58 +94,67 @@ export const EventList = () => {
             const isFull = seatsLeft === 0;
 
             const categoryColors = {
-              technical: 'bg-blue-50 text-blue-700 border-blue-200',
-              cultural: 'bg-purple-50 text-purple-700 border-purple-200',
-              sports: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-              academic: 'bg-amber-50 text-amber-700 border-amber-200',
-            }[evt.category] || 'bg-slate-50 text-slate-700';
+              technical: 'bg-blue-500/20 text-blue-300 border-blue-400/40',
+              cultural: 'bg-purple-500/20 text-purple-300 border-purple-400/40',
+              sports: 'bg-emerald-500/20 text-emerald-300 border-emerald-400/40',
+              academic: 'bg-amber-500/20 text-amber-300 border-amber-400/40',
+            }[evt.category] || 'bg-slate-500/20 text-slate-300 border-slate-400/40';
 
             return (
               <div
                 key={evt._id}
-                className="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition overflow-hidden flex flex-col justify-between"
+                className="glass-panel-interactive rounded-3xl overflow-hidden flex flex-col justify-between group"
               >
                 <div>
-                  <div className="h-44 w-full bg-slate-100 relative overflow-hidden">
+                  <div className="h-48 w-full relative overflow-hidden bg-slate-900/60">
                     <img
                       src={evt.image}
                       alt={evt.title}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
                     />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                     <span
-                      className={`absolute top-3 left-3 text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full border shadow-sm ${categoryColors}`}
+                      className={`absolute top-3 left-3 text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full border backdrop-blur-md shadow-lg ${categoryColors}`}
                     >
                       {evt.category}
                     </span>
                   </div>
 
-                  <div className="p-5 space-y-2">
-                    <h3 className="font-bold text-base text-slate-900 line-clamp-1">
+                  <div className="p-6 space-y-3">
+                    <h3 className="font-bold text-base text-white group-hover:text-blue-300 transition line-clamp-1">
                       {evt.title}
                     </h3>
-                    <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">
+                    <p className="text-xs text-slate-300 line-clamp-2 leading-relaxed">
                       {evt.description}
                     </p>
 
-                    <div className="pt-2 text-xs text-slate-600 space-y-1">
-                      <div>📅 {new Date(evt.date).toLocaleDateString()} • {evt.time}</div>
-                      <div>📍 {evt.venue}</div>
+                    <div className="pt-2 text-xs text-slate-300 space-y-1.5 border-t border-white/5 font-medium">
+                      <div className="flex items-center gap-2">
+                        <span>📅</span>
+                        <span>{new Date(evt.date).toLocaleDateString()} • {evt.time}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span>📍</span>
+                        <span>{evt.venue}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="p-5 pt-0">
-                  <div className="flex justify-between items-center text-xs text-slate-500 mb-2">
-                    <span>{seatsLeft} seats remaining</span>
-                    <span>{evt.registeredCount}/{evt.capacity}</span>
+                <div className="p-6 pt-0">
+                  <div className="flex justify-between items-center text-xs text-slate-300 mb-3 font-semibold">
+                    <span className={seatsLeft < 10 ? 'text-amber-400' : 'text-slate-300'}>
+                      {seatsLeft} seats remaining
+                    </span>
+                    <span className="text-slate-400 font-mono">{evt.registeredCount}/{evt.capacity}</span>
                   </div>
 
                   <Link
                     to={`/event/${evt._id}`}
-                    className={`w-full py-2.5 rounded-xl text-xs font-bold text-center block transition ${
+                    className={`w-full py-3 rounded-2xl text-xs font-bold text-center block transition shadow-lg ${
                       isFull
-                        ? 'bg-amber-100 text-amber-800 pointer-events-none'
-                        : 'bg-slate-900 hover:bg-blue-600 text-white'
+                        ? 'bg-amber-500/20 border border-amber-400/30 text-amber-300 pointer-events-none'
+                        : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white border border-blue-400/30 hover:scale-[1.01]'
                     }`}
                   >
                     {isFull ? 'Event is Full' : 'View Details & Register'}
@@ -146,9 +165,9 @@ export const EventList = () => {
           })}
         </div>
       ) : (
-        <div className="text-center py-16 bg-white rounded-2xl border border-slate-200 p-8">
-          <p className="text-sm font-bold text-slate-800">No events found</p>
-          <p className="text-xs text-slate-500 mt-1">Try selecting "All" or clearing the search box.</p>
+        <div className="text-center py-20 glass-panel rounded-3xl p-8">
+          <p className="text-base font-bold text-white">No events found</p>
+          <p className="text-xs text-slate-400 mt-2">Try selecting another category or resetting the search query.</p>
         </div>
       )}
     </div>
